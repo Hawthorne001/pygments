@@ -4,7 +4,7 @@
 
     Lexers for the R/S languages.
 
-    :copyright: Copyright 2006-2024 by the Pygments team, see AUTHORS.
+    :copyright: Copyright 2006-2025 by the Pygments team, see AUTHORS.
     :license: BSD, see LICENSE for details.
 """
 
@@ -88,6 +88,9 @@ class SLexer(RegexLexer):
         'valid_name': [
             (valid_name, Name),
         ],
+        'function_name': [
+            (rf'({valid_name})\s*(?=\()', Name.Function),
+        ],
         'punctuation': [
             (r'\[{1,2}|\]{1,2}|\(|\)|;|,', Punctuation),
         ],
@@ -97,7 +100,7 @@ class SLexer(RegexLexer):
              Keyword.Reserved),
         ],
         'operators': [
-            (r'<<?-|->>?|-|==|<=|>=|<|>|&&?|!=|\|\|?|\?', Operator),
+            (r'<<?-|->>?|-|==|<=|>=|\|>|<|>|&&?|!=|\|\|?|\?', Operator),
             (r'\*|\+|\^|/|!|%[^%]*%|=|~|\$|@|:{1,3}', Operator),
         ],
         'builtin_symbols': [
@@ -121,15 +124,15 @@ class SLexer(RegexLexer):
             (r'\'', String, 'string_squote'),
             (r'\"', String, 'string_dquote'),
             include('builtin_symbols'),
+            include('keywords'),
+            include('function_name'),
             include('valid_name'),
             include('numbers'),
-            include('keywords'),
             include('punctuation'),
             include('operators'),
         ],
         'root': [
             # calls:
-            (rf'({valid_name})\s*(?=\()', Name.Function),
             include('statements'),
             # blocks:
             (r'\{|\}', Punctuation),
